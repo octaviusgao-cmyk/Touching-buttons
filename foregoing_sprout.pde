@@ -33,15 +33,32 @@ void draw() {
   fill(93, 92, 92);
   rect(0, 0, 1000, 200);
 
+
+  if (geralton == true) {
+    strokeWeight(20);
+  } else {
+    stroke(0);
+  }
+
+
+
   tactile(500, 25, 650, 175);
   rect(500, 25, 150, 150);
   image(geralt, 500, 25, 150, 150);
 
+  fill(93, 92, 92);
+  strokeWeight(1);
+  if (batmanon == true) {
+    strokeWeight(20);
+  } else {
+    stroke(0);
+  }
+  
   tactile(750, 25, 900, 175);
   rect(750, 25, 150, 150);
   image(batman, 750, 25, 150, 150);
 
-
+  strokeWeight(1);
   //buttons
   tactile(50, 50, 100, 100);
   fill(blue);
@@ -107,10 +124,17 @@ void draw() {
 }
 
 
-
+void saveImage(File f) {
+  if (f != null) {
+    PImage canvas = get(0, 200, width-0, height-200);
+    canvas.save(f.getAbsolutePath());
+  }
+}
 void checkcircle(int x, int y, int w, int z, color s) {
   if (mouseX > x && mouseX < x + w && mouseY > y && mouseY < y + z) {
     indicator = s;
+    geralton = false;
+    batmanon = false;
   }
 }
 void slider() {
@@ -145,24 +169,28 @@ void mouseReleased() {
   geralt(500, 25, 150, 150);
   batman(750, 25, 150, 150);
 
+  //save button
+  if (mouseX > 910 && mouseX < 985 && mouseY > 60 && mouseY < 86 ) {
+    selectOutput("Choose a name for your new image file", "saveImage");
+  }
 
   //clear button
-  if (mouseX > 910 && mouseY > 25 && mouseX < 985 && mouseY < 123) {
-    fill(255);
-    rect(0, 0, 1000, 1000);
+  if (mouseX > 910 && mouseY > 25 && mouseX < 985 && mouseY < 53) {
+    background(255);
   }
 
   //load button
-  if (mouseX > 910 && mouseY > 60 && mouseX < 985 && mouseY < 158) {
+  if (mouseX > 910 && mouseY > 86 && mouseX < 985 && mouseY < 115) {
+    selectInput("Pick an image to load", "openImage");
   }
 }
 
-void load(File f) {
+void openImage(File f) {
   if (f != null) {
     int n = 0;
     while (n < 10) {
       PImage pic = loadImage(f.getPath());
-      image(pic, 200, 180);
+      image(pic, 0, 0);
       n = n + 1;
     }
   }
@@ -171,25 +199,27 @@ void load(File f) {
 void geralt(int x, int y, int w, int z) {
   if (mouseX > x && mouseY > y && mouseX < x+w && mouseY < y+z ) {
     geralton = !geralton;
+    batmanon = false;
   }
 }
 
 void batman(int x, int y, int w, int z) {
   if (mouseX > x && mouseY > y && mouseX < x+w && mouseY < y+z ) {
     batmanon = !batmanon;
+    geralton = false;
   }
 }
 
 void mouseDragged() {
-  if (geralton == false && batmanon == false) {
+  if (geralton == false && batmanon == false && mouseY > 200) {
 
     strokeWeight(thickness);
     stroke(indicator);
     line(pmouseX, pmouseY, mouseX, mouseY);
     slider();
-  } else if (geralton == true) {
+  } else if (geralton == true && mouseY > 200) {
     image(geralt, mouseX, mouseY, sizeX, sizeY);
-  } else if (batmanon == true) {
+  } else if (batmanon == true && mouseY > 200) {
     image(batman, mouseX, mouseY, sizeX, sizeY);
   }
 }
